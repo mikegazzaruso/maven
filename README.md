@@ -1,6 +1,6 @@
-# AI Video Generator
+# MAVEN (Multimedia AI Video Engine)
 
-An advanced application that generates videos from text using AI. The application creates a coherent narrative, generates matching images, and combines them with synthesized speech to produce engaging videos.
+An advanced AI-powered application that generates engaging videos from text using cutting-edge AI technologies. MAVEN creates coherent narratives, generates matching images, and combines them with synthesized speech to produce professional-quality videos.
 
 ## Features
 
@@ -54,10 +54,13 @@ cd frontend
 npm install
 ```
 
-4. Create a `.env` file in the backend directory with your OpenAI API key:
-```
-OPENAI_API_KEY=your_api_key_here
-```
+4. Set up your environment variables:
+   - Copy `.env.example` to create a new `.env` file:
+   ```bash
+   cp .env.example .env
+   ```
+   - Replace `your-openai-api-key` in the `.env` file with your actual OpenAI API key
+   - You can get an API key from [OpenAI's website](https://platform.openai.com/api-keys)
 
 ## Usage
 
@@ -117,3 +120,14 @@ npm start
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
+
+## TODO
+
+### Planned Features
+- **YouTube Integration**:
+  - Automatic video upload to YouTube after generation
+  - OAuth2 authentication for YouTube API
+  - Customizable video metadata (title, description, tags)
+  - Privacy settings configuration (public, unlisted, private)
+  - Playlist management
+  - Upload status tracking and notifications

@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Container, CssBaseline, IconButton, Box, useMediaQuery } from '@mui/material';
+import { 
+  Container, 
+  CssBaseline, 
+  IconButton, 
+  Box, 
+  useMediaQuery, 
+  Typography, 
+  Chip 
+} from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
@@ -106,30 +114,55 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
-        <Container>
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end', pt: 2 }}>
-            <IconButton onClick={toggleColorMode} color="inherit">
-              {mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
-            </IconButton>
+      <Container>
+        <Box sx={{ 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'center',
+          mt: 2,
+          mb: 2 
+        }}>
+          <Box>
+            <Typography variant="h4" component="h1" gutterBottom sx={{ display: 'flex', alignItems: 'center' }}>
+              MAVEN
+              <Chip 
+                label="BETA" 
+                color="warning" 
+                size="small" 
+                sx={{ ml: 2, verticalAlign: 'middle' }}
+              />
+            </Typography>
+            <Typography variant="subtitle1" color="text.secondary" gutterBottom>
+              Multimedia AI Video Engine
+            </Typography>
+            <Typography variant="subtitle2" color="text.secondary">
+              v0.1.1 • by Mike Gazzaruso
+            </Typography>
           </Box>
-          <VideoForm onSubmit={handleSubmit} isLoading={isLoading} />
-          {taskId && (
-            <VideoResult
-              taskId={taskId}
-              status={status}
-              error={error}
-              currentStep={currentStep}
-              progress={progress}
-              onDownload={handleDownload}
+          <IconButton onClick={toggleColorMode} color="inherit">
+            {mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
+          </IconButton>
+        </Box>
+        <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
+          <Container>
+            <VideoForm onSubmit={handleSubmit} isLoading={isLoading} />
+            {taskId && (
+              <VideoResult
+                taskId={taskId}
+                status={status}
+                error={error}
+                currentStep={currentStep}
+                progress={progress}
+                onDownload={handleDownload}
+              />
+            )}
+            <ToastContainer 
+              position="bottom-right"
+              theme={mode}
             />
-          )}
-          <ToastContainer 
-            position="bottom-right"
-            theme={mode}
-          />
-        </Container>
-      </Box>
+          </Container>
+        </Box>
+      </Container>
     </ThemeProvider>
   );
 }
