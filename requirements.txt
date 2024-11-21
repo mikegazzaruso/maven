@@ -1,0 +1,6 @@
+openai>=1.0.0
+Pillow>=10.0.0
+moviepy>=1.0.3
+gTTS>=2.3.2
+nltk>=3.8.1
+python-dotenv>=1.0.0
