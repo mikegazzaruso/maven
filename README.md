@@ -74,13 +74,11 @@ npm start
 3. Access MAVEN:
    - Local development: `http://localhost:3030`
    - Network access: `http://your-ip:3030`
-   - Domain access: `http://dev.gazzaruso.com:3030`
 
 ## 🔐 Security Features
 
 1. **Video Generation Protection**
    - Required security key for video generation
-   - Default key: `mammata9098$$$`
 
 2. **OpenAI API Key Management**
    - Optional API key input in UI
