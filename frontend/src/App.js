@@ -136,7 +136,7 @@ function App() {
               Multimedia AI Video Engine
             </Typography>
             <Typography variant="subtitle2" color="text.secondary">
-              v0.1.1 • by Mike Gazzaruso
+              v0.1.2 • by Mike Gazzaruso
             </Typography>
           </Box>
           <IconButton onClick={toggleColorMode} color="inherit">

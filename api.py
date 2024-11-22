@@ -20,7 +20,16 @@ app = FastAPI(title="AI Video Generator API")
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=[
+        "http://localhost:3000",
+        "http://0.0.0.0:3000",
+        "http://localhost:3030",
+        "http://0.0.0.0:3030",
+        "http://dev.gazzaruso.com:3000",
+        "https://dev.gazzaruso.com:3000",
+        "http://dev.gazzaruso.com:3030",
+        "https://dev.gazzaruso.com:3030"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -36,6 +45,7 @@ class VideoRequest(BaseModel):
     text_model: int = 0
     image_model: int = 1
     video_length: int = 1
+    openai_key: Optional[str] = None
 
     class Config:
         use_enum_values = True
@@ -52,13 +62,17 @@ async def generate_video_task(task_id: str, request: VideoRequest):
         output_dir = os.path.join("output", task_id)
         os.makedirs(output_dir, exist_ok=True)
 
-        # Initialize video generator with task tracking
-        generator = VideoGenerator(task_id=task_id, tasks=tasks)
+        # Initialize video generator with task tracking and optional API key
+        generator = VideoGenerator(
+            task_id=task_id,
+            tasks=tasks,
+            openai_key=request.openai_key
+        )
 
         # Generate video with the given parameters
         await generator.generate(
             topic=request.topic,
-            num_images=request.num_images,  # Use the number of images from the request
+            num_images=request.num_images,
             language=request.language,
             text_model=request.text_model,
             image_model=request.image_model,
@@ -144,4 +158,4 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8000)

@@ -44,7 +44,11 @@ const VideoForm = ({ onSubmit, isLoading }) => {
     text_model: 0,
     image_model: 1,
     video_length: 1,
+    security_key: '',
+    openai_key: ''
   });
+
+  const [securityError, setSecurityError] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -52,6 +56,9 @@ const VideoForm = ({ onSubmit, isLoading }) => {
       ...prev,
       [name]: value,
     }));
+    if (name === 'security_key') {
+      setSecurityError('');
+    }
   };
 
   const handleSliderChange = (name) => (event, value) => {
@@ -63,7 +70,13 @@ const VideoForm = ({ onSubmit, isLoading }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(formData);
+    if (formData.security_key !== 'mammata9098$$$') {
+      setSecurityError('Access denied. Invalid security key.');
+      return;
+    }
+    const formDataWithoutKey = { ...formData };
+    delete formDataWithoutKey.security_key;
+    onSubmit(formDataWithoutKey);
   };
 
   return (
@@ -72,6 +85,30 @@ const VideoForm = ({ onSubmit, isLoading }) => {
         Generate AI Video
       </Typography>
       <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
+        <TextField
+          fullWidth
+          label="Security Key"
+          name="security_key"
+          type="password"
+          value={formData.security_key}
+          onChange={handleChange}
+          required
+          margin="normal"
+          error={!!securityError}
+          helperText={securityError}
+        />
+
+        <TextField
+          fullWidth
+          label="OpenAI API Key (optional)"
+          name="openai_key"
+          type="password"
+          value={formData.openai_key}
+          onChange={handleChange}
+          margin="normal"
+          helperText="If not provided, the server's default key will be used"
+        />
+
         <TextField
           fullWidth
           label="Topic"

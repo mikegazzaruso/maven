@@ -21,10 +21,12 @@ logger = logging.getLogger(__name__)
 load_dotenv()
 
 class VideoGenerator:
-    def __init__(self, task_id: str, tasks: dict):
+    def __init__(self, task_id: str, tasks: dict, openai_key: str = None):
         self.task_id = task_id
         self.tasks = tasks
-        self.client = AsyncOpenAI(api_key=os.getenv('OPENAI_API_KEY'))
+        self.client = AsyncOpenAI(
+            api_key=openai_key if openai_key else os.getenv('OPENAI_API_KEY')
+        )
         self.update_status("queued", "Initializing", 0)
 
         # Download NLTK data if needed
