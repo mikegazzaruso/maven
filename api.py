@@ -15,7 +15,16 @@ import shutil
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-app = FastAPI(title="AI Video Generator API")
+app = FastAPI(
+    title="AI Video Generator API",
+    description="""
+    Generate AI videos with web search capabilities.
+    
+    This API now uses OpenAI Swarm to perform web searches and create more up-to-date
+    and factual content for your videos. The system will search the web for the latest
+    information about your topic before generating the essay.
+    """
+)
 
 # Configure CORS
 app.add_middleware(
@@ -46,9 +55,21 @@ class VideoRequest(BaseModel):
     image_model: int = 1
     video_length: int = 1
     openai_key: Optional[str] = None
+    use_web_search: bool = True  # Nuovo parametro per abilitare/disabilitare la ricerca web
 
     class Config:
         use_enum_values = True
+        schema_extra = {
+            "example": {
+                "topic": "The impact of artificial intelligence on modern society",
+                "num_images": 5,
+                "language": "en",
+                "text_model": 0,  # 0: GPT-4, 1: GPT-3.5
+                "image_model": 1,  # 0: DALL-E 2, 1: DALL-E 3
+                "video_length": 1,  # 0: 30s, 1: 1min, 2: 4min
+                "use_web_search": True  # Abilita la ricerca web per contenuti aggiornati
+            }
+        }
 
 class TaskStatus(BaseModel):
     status: str
@@ -77,7 +98,8 @@ async def generate_video_task(task_id: str, request: VideoRequest):
             text_model=request.text_model,
             image_model=request.image_model,
             video_length=request.video_length,
-            output_dir=output_dir
+            output_dir=output_dir,
+            use_web_search=request.use_web_search
         )
 
     except Exception as e:
@@ -158,4 +180,4 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="127.0.0.1", port=8000)

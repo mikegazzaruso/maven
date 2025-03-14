@@ -28,6 +28,7 @@ wheels/
 # Virtual Environment
 venv/
 ENV/
+venv_new/
 
 # Generated files
 *.mp3
