@@ -1,8 +1,15 @@
-# 🎬 MAVEN (Multimedia AI Video Engine)
+# 🎬 MAVEN (Multimedia AI Video Engine) v0.2.0
 
 Welcome to MAVEN! 🚀 Your go-to AI-powered video creation suite that transforms text into engaging video content. Using cutting-edge AI technologies, MAVEN crafts professional videos by generating coherent narratives, matching visuals, and natural speech synthesis.
 
 ## ✨ Features
+
+### 🔍 Web Search Integration (New in v0.2.0)
+- 🌐 Real-time web search for up-to-date information
+- 🤖 Multi-agent system powered by OpenAI Swarm
+- 📊 Intelligent filtering and organization of search results
+- 📝 Enhanced content generation with factual, current information
+- 🔄 Toggle to enable/disable web search functionality
 
 ### 🌍 Multi-Language Support
 Generate videos in multiple languages:
@@ -87,20 +94,25 @@ npm start
 
 ## 🎥 Video Generation Process
 
-1. **Essay Generation** 📝
-   - AI generates a coherent essay based on your topic
+1. **Web Research** 🌐 (New in v0.2.0)
+   - Multi-agent system searches the web for up-to-date information
+   - Intelligent filtering and organization of search results
+   - Enhanced content generation with factual, current information
+
+2. **Essay Generation** 📝
+   - AI generates a coherent essay based on your topic and web research
    - Length is adjusted based on your selected video duration
 
-2. **Image Generation** 🎨
+3. **Image Generation** 🎨
    - Essay is divided into meaningful segments
    - Each segment is converted into a detailed image prompt
    - DALL-E generates stunning visuals based on these prompts
 
-3. **Audio Generation** 🔊
+4. **Audio Generation** 🔊
    - Essay is converted to natural-sounding speech
    - Multiple language support with native pronunciation
 
-4. **Video Compilation** 🎬
+5. **Video Compilation** 🎬
    - Images are sequenced with perfect timing
    - Audio is synchronized with the visuals
    - Final video is rendered in high-quality MP4 format

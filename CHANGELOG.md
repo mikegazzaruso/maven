@@ -5,7 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.1.2] - 2024-01-10
+## [0.2.0] - 13 March 2025
+
+### Added
+- Web search integration using OpenAI Swarm for up-to-date content
+- Multi-agent system for intelligent web research:
+  - Search Agent: Finds relevant information on the web
+  - Filter Agent: Processes and organizes search results
+  - Content Agent: Creates well-structured content from filtered data
+- Toggle in UI to enable/disable web search functionality
+- Tooltip with information about the web search feature
+- Improved essay generation with factual, current information
+- DuckDuckGo search integration for web queries
+
+### Changed
+- Updated OpenAI library to version 1.66.0+
+- Enhanced prompt engineering for better content generation
+- Improved error handling with graceful fallback to standard generation
+- Updated API documentation to reflect new capabilities
+- Expanded requirements.txt with new dependencies
+
+### Fixed
+- Compatibility issues with newer versions of OpenAI API
+- Error handling for web search failures
+
+## [0.1.2] - 10 October 2024
 
 ### Added
 - Optional OpenAI API key input in UI
