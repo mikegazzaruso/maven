@@ -10,7 +10,11 @@ import {
   Paper,
   Typography,
   Slider,
+  FormControlLabel,
+  Switch,
+  Tooltip,
 } from '@mui/material';
+import InfoIcon from '@mui/icons-material/Info';
 
 const LANGUAGES = [
   { value: "en", label: "English" },
@@ -45,7 +49,8 @@ const VideoForm = ({ onSubmit, isLoading }) => {
     image_model: 1,
     video_length: 1,
     security_key: '',
-    openai_key: ''
+    openai_key: '',
+    use_web_search: true
   });
 
   const [securityError, setSecurityError] = useState('');
@@ -65,6 +70,14 @@ const VideoForm = ({ onSubmit, isLoading }) => {
     setFormData((prev) => ({
       ...prev,
       [name]: value,
+    }));
+  };
+
+  const handleSwitchChange = (e) => {
+    const { name, checked } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: checked,
     }));
   };
 
@@ -106,8 +119,25 @@ const VideoForm = ({ onSubmit, isLoading }) => {
           value={formData.openai_key}
           onChange={handleChange}
           margin="normal"
-          helperText="If not provided, the server's default key will be used"
+          helperText="If not provided, the server's API key will be used"
         />
+
+        <Box sx={{ display: 'flex', alignItems: 'center', mt: 2, mb: 1 }}>
+          <FormControlLabel
+            control={
+              <Switch
+                name="use_web_search"
+                checked={formData.use_web_search}
+                onChange={handleSwitchChange}
+                color="primary"
+              />
+            }
+            label="Use Web Search"
+          />
+          <Tooltip title="When enabled, the system will search the web for the latest information about your topic before generating the video. This helps create more up-to-date and factual content." placement="right">
+            <InfoIcon color="primary" fontSize="small" sx={{ ml: 1 }} />
+          </Tooltip>
+        </Box>
 
         <TextField
           fullWidth

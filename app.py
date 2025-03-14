@@ -71,9 +71,9 @@ def generate_essay(topic, length_option, model_option, language):
     word_count = word_counts[length_option]
     model = models[model_option]
     
-    combined_prompt = f"""Write a coherent essay in {language['openai']} about the following topic: {topic}. 
-    The essay should be approximately {word_count} words long to achieve a spoken duration of {word_counts[length_option]/150:.1f} minutes.
-    Make the essay vivid and descriptive, with clear imagery that can be visualized."""
+    combined_prompt = f"""You are an anchorman and speak in {language['openai']} about the actual trends news on the following topic: {topic}. 
+    you must generate  {word_count} words long to achMake yourieve a spoken duration of {word_counts[length_option]/150:.1f} minutes.
+     The purpose of this spoke must be to give a detailed, yet concise snapshot of the proposed topic fresh news."""
     
     print(f"Using {model} to generate essay in {language['name']}...")
     response = client.chat.completions.create(

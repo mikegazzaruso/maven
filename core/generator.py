@@ -12,6 +12,7 @@ import logging
 import shutil
 import aiohttp
 import asyncio
+from core.web_search import WebSearchAgent
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -27,6 +28,7 @@ class VideoGenerator:
         self.client = AsyncOpenAI(
             api_key=openai_key if openai_key else os.getenv('OPENAI_API_KEY')
         )
+        self.web_search_agent = WebSearchAgent(openai_key=openai_key)
         self.update_status("queued", "Initializing", 0)
 
         # Download NLTK data if needed
@@ -79,7 +81,7 @@ class VideoGenerator:
         Make the essay vivid and descriptive, with clear imagery that can be visualized."""
 
     async def generate_essay(self, topic, length_option, model_option, language):
-        """Generate an essay about the topic using OpenAI's API."""
+        """Generate an essay about the topic using OpenAI's API and web search."""
         try:
             # Detect and validate language
             lang_info = self.detect_language(language)
@@ -95,14 +97,36 @@ class VideoGenerator:
             # Get system message based on length option
             system_message = self.get_system_message(length_option, lang_info['openai'])
             
-            logger.info(f"Using {model} to generate essay in {lang_info['name']}...")
+            logger.info(f"Using {model} with web search to generate essay in {lang_info['name']}...")
+            
+            # Utilizziamo l'agente di ricerca web per ottenere informazioni aggiornate
+            self.update_status("processing", "Searching web for latest information", 5)
+            try:
+                web_content = await self.web_search_agent.generate_content(topic, language=lang_info['code'])
+                logger.info("Web search completed successfully")
+                
+                # Creiamo un prompt che include le informazioni dalla ricerca web
+                prompt = f"""
+                Write an essay about: {topic}
+                
+                Use the following information from recent web searches to make the essay factual and up-to-date:
+                
+                {web_content}
+                
+                The essay should be approximately {self.get_word_count(length_option)} words long.
+                Make it vivid and descriptive, with clear imagery that can be visualized.
+                """
+                
+            except Exception as e:
+                logger.warning(f"Web search failed, falling back to standard generation: {str(e)}")
+                prompt = f"Write about: {topic}"
             
             # Create the chat completion
             response = await self.client.chat.completions.create(
                 model=model,
                 messages=[
                     {"role": "system", "content": system_message},
-                    {"role": "user", "content": f"Write about: {topic}"}
+                    {"role": "user", "content": prompt}
                 ]
             )
             
@@ -113,6 +137,15 @@ class VideoGenerator:
         except Exception as e:
             logger.error(f"Error generating essay: {str(e)}")
             raise
+
+    def get_word_count(self, length_option):
+        """Get target word count based on length option."""
+        word_counts = {
+            0: 75,    # ~30 seconds
+            1: 150,   # ~1 minute
+            2: 600    # ~4 minutes
+        }
+        return word_counts[length_option]
 
     async def generate_image_prompts(self, essay, num_images, language):
         """Generate image prompts from the essay text."""
@@ -287,13 +320,25 @@ class VideoGenerator:
         logger.info(f"Video saved to {output_path}")
         return output_path
 
-    async def generate(self, topic, num_images, language, text_model, image_model, video_length, output_dir):
+    async def generate(self, topic, num_images, language, text_model, image_model, video_length, output_dir, use_web_search=True):
         """Main generation method that coordinates the entire process."""
         try:
             self.update_status("processing", "Generating essay", 0)
             
-            # Generate essay
-            essay = await self.generate_essay(topic, video_length, text_model, language)
+            # Disabilita temporaneamente l'agente di ricerca web se richiesto
+            original_web_search_agent = self.web_search_agent
+            if not use_web_search:
+                logger.info("Web search disabled for this request")
+                self.web_search_agent = None
+            
+            try:
+                # Generate essay
+                essay = await self.generate_essay(topic, video_length, text_model, language)
+            finally:
+                # Ripristina l'agente di ricerca web
+                if not use_web_search:
+                    self.web_search_agent = original_web_search_agent
+            
             self.update_status("processing", "Generating image prompts", 20)
             
             # Generate image prompts
